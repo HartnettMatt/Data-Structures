@@ -1,0 +1,18 @@
+I solved problem #3, the one with the array splitting.
+My code does compile on my machine, but just in case, I created this file.
+
+My logic for problem 1 is as such (also commented in the code itself):
+
+1. Find the number of elements in the linked list
+2. Find the node at the value of #elements - n, and store the pointer that points to the node before the one that is going to be deleted
+3. Make sure that if the user is trying to delete the head node, that edge case is taken care of with a special delete method
+4. Since the node is not head, the previous node's next value can be set to the node's next value, and the node can be deleted
+
+My logic for problem 3 (also commented):
+
+0. Create all the necessary variables for the split function (evenArr, oddArr, evenCount, oddCount) and then run the split function
+1. Count the number of odd values and even values by iterating through the array and counting
+2. Create the odd array and even array using the counts found in step 1
+3. Loop through the array again and sort and place each element
+4. To display the values, first check if the relevant array is empty, and if it is print out the appropriate statement, but if it isn't, loop through and print out each value
+5. After displaying all of the values properly, delete all of the arrays (arr, evenArr, and oddArr) to free up the memory
