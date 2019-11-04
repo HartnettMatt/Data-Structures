@@ -77,17 +77,12 @@ void Graph::depthFirstTraversal(string sourceVertex){
 
 // TODO: Finish these three methods:
 vertex* Graph::DijkstraAlgorithm(string start, string end){
-  queue<vertex*> q;
   vertex *vStart = NULL;
   vertex *vEnd = NULL;
-
   for(unsigned int i = 0; i < vertices.size(); i++){
-    vertices[i]->distance = 100000;
-    vertices[i]->pred = NULL;
-    q.push(vertices[i]);
     if(vertices[i]->name.compare(start) == 0){
       vStart = vertices[i];
-    } else if (vertices[i]->name.compare(end) == 0){
+    } else if(vertices[i]->name.compare(end) == 0){
       vEnd = vertices[i];
     }
   }
@@ -95,29 +90,65 @@ vertex* Graph::DijkstraAlgorithm(string start, string end){
     cout << "Error: start or end not found" << endl;
     return NULL;
   }
+  // If visited, means its been solved
+  vStart->visited = true;
   vStart->distance = 0;
-  q.push(vStart);
-  while(!q.empty()){
-    vertex *u = q.front();
-    q.pop();
-    for(unsigned int j = 0; j < u->adj.size(); j++){
-      int alt = u->distance + u->adj[j].weight;
-      if(alt < u->adj[j].v->distance){
-        u->adj[j].v->distance = alt;
-        u->adj[j].v->pred = u;
+  vector<vertex*> solvedList;
+  solvedList.push_back(vStart);
+  while(!vEnd->visited){
+    int minDist = 1000000;
+    vertex *solvedV = NULL;
+    for(unsigned int x = 0; x < solvedList.size(); x++){
+      vertex *s = solvedList[x];
+      // now iterate across s's adj solvedList
+      for(unsigned int y = 0; y < s->adj.size(); y++){
+        if(s->adj[y].v->visited == false){
+          int dist = s->distance + s->adj[y].weight;
+          if(dist < minDist){
+            solvedV = s->adj[y].v;
+            minDist = dist;
+            s->adj[y].v->pred = s;
+          }
+        }
       }
-      // q.push(u->adj[j].v);
     }
+    solvedV->distance = minDist;
+    solvedV->visited = true;
+    solvedList.push_back(solvedV);
   }
   return vEnd;
 }
 
 void Graph::shortestpath(string start, string end){
-
+  vertex *vStart = NULL;
+  vertex *vEnd = NULL;
+  for(unsigned int i = 0; i < vertices.size(); i++){
+    if(vertices[i]->name.compare(start) == 0){
+      vStart = vertices[i];
+    } else if(vertices[i]->name.compare(end) == 0){
+      vEnd = vertices[i];
+    }
+  }
+  if(vStart == NULL || vEnd == NULL){
+    cout << "Error: start or end not found" << endl;
+    return;
+  }
+  vertex *crawler = vEnd;
+  vector<vertex*> path;
+  while(crawler != NULL){
+    path.push_back(crawler);
+    crawler = crawler->pred;
+  }
+  for(int i = path.size()-1; i >= 0; i--){
+    cout << path[i]->name << " ";
+  }
+  cout << endl;
 }
 
 void Graph::setAllVerticesUnvisited(){
-
+  for(unsigned int i = 0; i < vertices.size(); i++){
+    vertices[i]->visited = false;
+  }
 }
 
 
