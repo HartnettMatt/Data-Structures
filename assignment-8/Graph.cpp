@@ -66,7 +66,6 @@ void Graph::breadthFirstTraverse(string sourceVertex){
   {
     n = q.front();
     q.pop();
-    n->distance = 0;
     for(unsigned int x = 0; x < n->adj.size(); x++ )
     {
       if(!n->adj[x].v->visited)
@@ -78,6 +77,7 @@ void Graph::breadthFirstTraverse(string sourceVertex){
       }
     }
   }
+  cout << endl;
 }
 
 void DFTraversal(vertex *n){
@@ -101,8 +101,37 @@ int Graph::getConnectedComponents(){
   return c;
 }
 
-bool Graph::checkBipartite(){
+bool checkHelper(vertex *start){
+  start->color = "red";
   queue<vertex*> q;
+  q.push(start);
+  while(!q.empty()){
+    vertex *n = q.front();
+    q.pop();
+    for(unsigned int i = 0; i < n->adj.size(); i++){
+      if((n->color.compare("red") == 0 && n->adj[i].v->color.compare("red") == 0) || (n->color.compare("blue") == 0 && n->adj[i].v->color.compare("blue") == 0)){
+        return false;
+      } else if (!n->adj[i].v->visited){
+        n->adj[i].v->visited = true;
+        if(n->color.compare("red") == 0){
+          n->adj[i].v->color = "blue";
+        } else if(n->color.compare("blue") == 0){
+          n->adj[i].v->color = "red";
+        }
+        q.push(n->adj[i].v);
+      }
+    }
+  }
+  return true;
+}
+bool Graph::checkBipartite(){
+  for(unsigned int k = 0; k < vertices.size(); k++){
+    if(!vertices[k]->visited){
+      if(!checkHelper(vertices[k])){
+        return false;
+      }
+    }
+  }
   return true;
 }
 
