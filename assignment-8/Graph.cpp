@@ -1,8 +1,9 @@
 // #ifndef GRAPH_H
 // #define GRAPH_H
 #include "Graph.hpp"
-#include<vector>
-#include<iostream>
+#include <vector>
+#include <queue>
+#include <iostream>
 using namespace std;
 
 void Graph::addEdge(string v1, string v2){
@@ -47,16 +48,62 @@ void Graph::displayEdges(){
 }
 
 void Graph::breadthFirstTraverse(string sourceVertex){
+  cout << "Starting vertex (root): " << sourceVertex << "->";
+  vertex *vStart;
+  for(unsigned int i = 0; i < vertices.size(); i++)
+  {
+      if(vertices[i]->name == sourceVertex)
+      {
+          vStart = vertices[i];
+      }
+  }
+  vStart->visited = true;
+  vStart->distance = 0;
+  queue<vertex*> q;
+  q.push(vStart);
+  vertex *n;
+  while(!q.empty())
+  {
+    n = q.front();
+    q.pop();
+    n->distance = 0;
+    for(unsigned int x = 0; x < n->adj.size(); x++ )
+    {
+      if(!n->adj[x].v->visited)
+      {
+        n->adj[x].v->distance = n->distance+1;
+        cout << " " << n->adj[x].v->name << "(" << n->adj[x].v->distance << ")";
+        n->adj[x].v->visited = true;
+        q.push(n->adj[x].v);
+      }
+    }
+  }
+}
 
+void DFTraversal(vertex *n){
+    n->visited = true;
+    for(unsigned int x = 0; x < n->adj.size(); x++ )
+    {
+      if(!n->adj[x].v->visited){
+        DFTraversal(n->adj[x].v);
+      }
+    }
 }
 
 int Graph::getConnectedComponents(){
-
+  int c = 0;
+  for(unsigned int i = 0; i < vertices.size(); i++){
+    if(!vertices[i]->visited){
+      DFTraversal(vertices[i]);
+      c++;
+    }
+  }
+  return c;
 }
 
 bool Graph::checkBipartite(){
-
+  queue<vertex*> q;
+  return true;
 }
-
 
 // #endif // GRAPH_H
