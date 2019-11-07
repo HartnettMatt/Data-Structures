@@ -64,18 +64,13 @@ bool HashTable::insertItem(int key)
 // function to display hash table
 void HashTable::printTable()
 {
-    for (int i = 0; i < tableSize; i++) {
-        cout << i <<" || ";
-        if(table[i] != nullptr){
-          node *crawler = table[i];
-          while(crawler != nullptr){
-            cout << crawler->key << "->";
-            crawler = crawler->next;
-          }
-          cout << "NULL" << endl;
-        } else {
-          cout << "NULL" << endl;
-        }
+  for (int i = 0; i < tableSize; i++) {
+    cout << i <<" || ";
+    node *crawler = table[i];
+    while(crawler != nullptr){
+      cout << crawler->key << "->";
+      crawler = crawler->next;
     }
-
+    cout << "NULL" << endl;
+  }
  }
