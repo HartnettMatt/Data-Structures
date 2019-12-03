@@ -46,7 +46,7 @@ int main()
   }
 
   // Simple test code for the BST implementation
-  bool testingBST = true;
+  bool testingBST = false;
   if(testingBST){
     hashBST htBST;
     htBST.insertItem(15);
@@ -63,5 +63,25 @@ int main()
     } else {
       cout << "15 not found in BST Hash Table" << endl;
     }
+    if(htBST.deleteItem(15)){
+      cout<<"15 deleted from the hash table"<<endl;
+      if(htBST.searchItem(15))
+       {
+         cout<<"15 found in the hash table"<<endl;
+         htBST.print100();
+       }
+      else{
+        cout<<"15 not found in the hash table"<<endl;
+      }
+    } else {
+      cout<<"15 not deleted from the hash table"<<endl;
+    }
   }
+
+  // Simple test code for the linear probing
+  bool testingLP = true;
+  if(testingLP){
+    
+  }
+  return 0;
 }

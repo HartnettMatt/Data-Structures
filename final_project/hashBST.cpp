@@ -16,7 +16,7 @@ unsigned int hashBST::hashFunction(int key)
 }
 
 
-//function to search
+//functions to search
 Node* searchKeyHelper(Node* currNode, int data){
     if(currNode == NULL)
         return NULL;
@@ -35,16 +35,9 @@ Node* hashBST::searchItem(int key)
     int index = hashFunction(key);
     Node *treeHead = table[index];
     return searchKeyHelper(treeHead, key);
-    // node *crawler = table[index];
-    // while(crawler != nullptr){
-    //   if(crawler->key == key){
-    //     return crawler;
-    //   }
-    //   crawler = crawler->next;
-    // }
 }
 
-//function to insert
+//functions to insert
 Node* hashBST::addNodeHelper(Node* currNode, int data)
 {
   if(currNode == NULL){
@@ -76,7 +69,7 @@ bool hashBST::insertItem(int key)
   return true;
 }
 
-// function to display hash table
+// functions to display hash table
 void hashBST::printHelper(Node * node)
 {
   if(node != nullptr){
@@ -117,4 +110,72 @@ void hashBST::print100()
     }
     cout << endl;
   }
+}
+
+// helper function to delete item from hash table
+bool hashBST::deleteNode(Node * currNode, int key){
+  if(key < currNode->key){
+    deleteNode(currNode->left, key);
+  } else if(key > currNode->key){
+    deleteNode(currNode->right, key);
+  }
+  // We found the node with the value
+  else {
+    //Case : No child
+    if(currNode->left == NULL && currNode->right == NULL)
+    {
+      currNode = nullptr;
+      cout << "here";
+      delete currNode;
+      return true;
+    }
+    //Case : Only right child
+    else if(currNode->left == NULL)
+    {
+      Node *temp = currNode;
+      currNode = currNode->right;
+      delete currNode;
+      return true;
+    }
+    //Case : Only left child
+    else if(currNode->right == NULL)
+    {
+      Node *temp = currNode;
+      currNode = currNode->left;
+      delete currNode;
+      return true;
+    }
+    //Case: Both left and right child
+    else
+    {
+      ///Replace with Minimum from right subtree
+      Node *min = getMinValueNode(currNode->right);
+      currNode->key = min->key;
+      deleteNode(currNode->left, min->key);
+    }
+  }
+}
+
+// function to delete item from hash table
+bool hashBST::deleteItem(int key)
+{
+  int index = hashFunction(key);
+  if(table[index] == nullptr){
+    return false;
+  } else if(table[index]->key == key){
+    Node *temp = table[index];
+    table[index] == nullptr;
+    delete temp;
+    return true;
+  } else {
+    return deleteNode(table[index], key);
+  }
+}
+
+// function to find smallest value from tree with root currNode
+Node* hashBST::getMinValueNode(Node* currNode){
+    if(currNode->left == NULL){
+      return currNode;
+    }
+    return getMinValueNode(currNode->left);
 }

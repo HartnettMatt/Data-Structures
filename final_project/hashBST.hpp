@@ -31,6 +31,8 @@ class hashBST
     void printHelper(Node* node);
     void printTable();
     void print100();
-
+    bool deleteItem(int key);
+    bool deleteNode(Node *currNode, int key);
+    Node* getMinValueNode(Node* currNode);
     Node* searchItem(int key);
 };
