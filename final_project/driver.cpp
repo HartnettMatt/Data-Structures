@@ -97,7 +97,7 @@ int main()
     for(int i = 0; i < 10005; i++){
       htLP.insertItem(rand());
     }
-    cout<< "The first 100 elements of the LL hash table are:"<<endl;
+    cout<< "The first 100 elements of the LP hash table are:"<<endl;
     htLP.print100();
 
     cout << endl;
@@ -115,6 +115,48 @@ int main()
        {
          cout<<"15 found in the hash table"<<endl;
          htLP.print100();
+       }
+      else{
+        cout<<"15 not found in the hash table"<<endl;
+      }
+    } else {
+      cout<<"15 not deleted from the hash table"<<endl;
+    }
+    cout << endl;
+    cout << "============================\n" << endl;
+  }
+
+  // Simple test code for the cuckcoo collision resolving
+  bool testingCC = true;
+  if(testingCC){
+    hashLP htCC;
+    // Cuckcoo probing test:
+    htCC.insertItem(15);
+    htCC.insertItem(16);
+    htCC.insertItem(16);
+    htCC.insertItem(17);
+    // Fill the array with random integers
+    for(int i = 0; i < 10005; i++){
+      htCC.insertItem(rand());
+    }
+    cout<< "The first 100 elements of the CC hash table are:"<<endl;
+    htCC.print100();
+
+    cout << endl;
+    // Search test code:
+    if(htCC.searchItem(15) != -1){
+      cout << "Found 15 in CC Hash Table" << endl;
+    } else {
+      cout << "15 not found in CC Hash Table" << endl;
+    }
+
+    // Delete test code:
+    if(htCC.deleteItem(15)){
+      cout<<"15 deleted from the hash table"<<endl;
+      if(htCC.searchItem(15) != -1)
+       {
+         cout<<"15 found in the hash table"<<endl;
+         htCC.print100();
        }
       else{
         cout<<"15 not found in the hash table"<<endl;
