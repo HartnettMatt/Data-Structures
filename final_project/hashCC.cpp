@@ -6,8 +6,9 @@ hashCC::hashCC(){
   tableSize = 10009;
   table = new int[tableSize];
 }
+
 // inserts a key into hash table
-bool hashCC::insertItem(int key){
+bool hashCC::insertHelper(int key, int first){
   // Insert into first hash location if empty
   int index = hashFunction(key);
   if(table[index] == 0){
@@ -20,10 +21,19 @@ bool hashCC::insertItem(int key){
     table[index] = key;
     return true;
   } else {
+
     int temp = table[index];
-    table[index] = key;
-    insertItem(temp);
+    if(temp == first){
+      cout << "FUCK" << endl;
+      return false;
+    } else {
+      table[index] = key;
+      insertHelper(temp, first);
+    }
   }
+}
+bool hashCC::insertItem(int key){
+  return insertHelper(key, key);
 }
 
 // hash function to map values to key

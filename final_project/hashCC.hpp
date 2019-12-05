@@ -8,6 +8,7 @@ class hashCC {
 
   int *table;
 
+  bool insertHelper(int key, int first);
   public:
     hashCC();  // Constructor
 

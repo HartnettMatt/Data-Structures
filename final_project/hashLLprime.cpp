@@ -1,7 +1,8 @@
 #include "hashLL.hpp"
+#include <math.h>
 using namespace std;
 
-hashLL::hashLL()
+hashLLprime::hashLLprime()
 {
     tableSize = 10009;
     table = new node*[10009];
@@ -9,7 +10,7 @@ hashLL::hashLL()
         table[i] = nullptr;
 }
 
-node* hashLL::createNode(int key, node* next)
+node* hashLLprime::createNode(int key, node* next)
 {
     node* nw = new node;
     nw->key = key;
@@ -18,13 +19,13 @@ node* hashLL::createNode(int key, node* next)
 }
 
 //function to calculate hash function
-unsigned int hashLL::hashFunction(int key)
+unsigned int hashLLprime::hashFunction(int key)
 {
     return (int)floor((key*1.0)/ tableSize)%tableSize;
 }
 
 //function to search
-node* hashLL::searchItem(int key)
+node* hashLLprime::searchItem(int key)
 {
     //Compute the index by using the hash function
     int index = hashFunction(key);
@@ -39,7 +40,7 @@ node* hashLL::searchItem(int key)
 }
 
 //function to insert
-bool hashLL::insertItem(int key)
+bool hashLLprime::insertItem(int key)
 {
   if(searchItem(key) != nullptr && searchItem(key)->key == key){
     // cout<<"duplicate entry: "<<key<<endl;
@@ -58,7 +59,7 @@ bool hashLL::insertItem(int key)
 }
 
 // function to display hash table
-void hashLL::printTable()
+void hashLLprime::printTable()
 {
   for (int i = 0; i < tableSize; i++) {
     cout << i <<" || ";
@@ -72,7 +73,7 @@ void hashLL::printTable()
  }
 
 // function to display first 100 values for testing purpose
-void hashLL::print100()
+void hashLLprime::print100()
 {
   for (int i = 0; i < 100; i++) {
     cout << i <<" || ";
@@ -86,7 +87,7 @@ void hashLL::print100()
 }
 
 // function to delete item from hash table
-bool hashLL::deleteItem(int key)
+bool hashLLprime::deleteItem(int key)
 {
   int index = hashFunction(key);
   node *crawler = table[index];

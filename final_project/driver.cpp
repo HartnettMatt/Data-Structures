@@ -1,7 +1,10 @@
 // Driver program
-#include<iostream>
-#include<fstream>
+#include <iostream>
+#include <fstream>
+#include <ostream>
 #include <stdlib.h>
+#include <chrono>
+#include <vector>
 #include "hashLL.hpp"
 #include "hashBST.hpp"
 #include "hashLP.hpp"
@@ -17,6 +20,7 @@ int main()
 
   // Number to test with (gotten from data set A):
   int searchFor = 34047189;
+
   // Simple test code for the linked list implementation
   bool testingLL = false;
   if(testingLL){
@@ -55,6 +59,91 @@ int main()
     cout << endl;
     cout << "============================\n" << endl;
   }
+
+  // Code to time the linked list hash table
+  bool timingLL = true;
+  if(timingLL){
+
+    // Loop to test different load factors
+    for(float load = 0.1; load < 1.0; load += .1){
+      iFA.close();
+      iFA.open("dataSetA.csv");
+      // build a full array out of the test values
+      vector <int> arr;
+      int i = 0;
+      while(getline(iFA, s, ',')){
+        arr.push_back(stoi(s));
+        i++;
+      }
+      // These arrays are needed for timing of insert search and delete
+      vector<int> insertArr, searchArr, deleteArr;
+      hashLL htLL;
+      // Loop to fill the hash table with random values from the test data
+      for(int j = 0; j < (int)(10009*load)+100; j++){
+        int index, item, counter;
+
+        // Loop to find random values that haven't been used yet
+        if(arr.size() == 0){
+          cout << "empty array" << endl;
+        }
+        do{
+          index = rand()%(arr.size()-1);
+          item = arr[index];
+        } while (item == -1);
+
+
+        // After random value is found, add to the main array or add to the insert array
+        if(j < (int)(10009*load)){
+          htLL.insertItem(item);
+          arr[index] = -1;
+          // Add 100 values to the search and delete arrays
+          if(counter < 100){
+            searchArr.push_back(item);
+            deleteArr.push_back(item);
+            counter++;
+          }
+        } else {
+          insertArr.push_back(item);
+        }
+      }
+      // Output file for moving the data into google sheets
+      ofstream oFS;
+      oFS.open("outputfile.txt");
+      float outArr[9][100];
+      // Now that the hash table has the load factors worth of values, can actually test the three methods:
+      float insertTotal, searchTotal, deleteTotal;
+      std::chrono::time_point<std::chrono::system_clock> startTime, endTime;
+
+      cout << "\n=============================" << endl;
+      cout << "Load factor: " << load << "\n" << endl;
+
+      // Test 100 of specific function
+      for(int k = 0; k < 100; k++){
+        typedef std::chrono::high_resolution_clock Time;
+        typedef std::chrono::nanoseconds ns;
+        typedef std::chrono::duration<float> fsec;
+        htLL.insertItem(insertArr[k]);
+        auto t0 = Time::now();
+        htLL.searchItem(insertArr[k]);
+        auto t1 = Time::now();
+        fsec fs = t1 - t0;
+        ns d = std::chrono::duration_cast<ns>(fs);
+        std::cout << fs.count() << "\n";
+        // Add to the output array
+        outArr[(int)(load*10)-1][k] = fs.count();
+      }
+
+      // Send output array to output File
+      for(int f = 0; f < 100; f++){
+        for(int y = 0; y < 9; y++){
+          oFS << outArr[y][f] << "\t";
+        }
+        oFS << "\n";
+      }
+    }
+    cout << endl;
+  }
+
 
   // Simple test code for the BST implementation
   bool testingBST = false;
@@ -95,7 +184,7 @@ int main()
   }
 
   // Simple test code for the linear probing
-  bool testingLP = true;
+  bool testingLP = false;
   if(testingLP){
     hashLP htLP;
     // Fill the array with data
@@ -170,6 +259,12 @@ int main()
     cout << "============================\n" << endl;
   }
 
+  // hashCC htCC;
+  // htCC.insertItem(15);
+  // htCC.insertItem(15);
+  // htCC.insertItem(15);
+  // htCC.print100();
   iFA.close();
+
   return 0;
 }
