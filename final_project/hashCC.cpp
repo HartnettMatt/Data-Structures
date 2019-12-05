@@ -5,8 +5,33 @@ using namespace std;
 hashCC::hashCC(){
   tableSize = 10009;
   table = new int[tableSize];
+  rehashCount = 0;
 }
 
+// Rehash function if a loop is encountered:
+bool hashCC::rehash(){
+  int oldTableSize = tableSize;
+  cout << "rehashing..." << endl;
+  if(rehashCount == 0){
+    tableSize = 20021;
+  } else if(rehashCount == 1){
+    tableSize = 40039;
+  } else if(rehashCount == 2){
+    tableSize = 80077;
+  } else {
+    cout << "can't rehash: too large" << endl;
+    return false;
+  }
+  int *temp = table;
+  table = new int[tableSize];
+  for(int i = 0; i < oldTableSize; i++){
+    insertItem(temp[i]);
+  }
+  delete temp;
+  rehashCount++;
+  cout << "rehashed!";
+  return true;
+}
 // inserts a key into hash table
 bool hashCC::insertHelper(int key, int first){
   // Insert into first hash location if empty
@@ -21,11 +46,14 @@ bool hashCC::insertHelper(int key, int first){
     table[index] = key;
     return true;
   } else {
-
     int temp = table[index];
     if(temp == first){
-      cout << "FUCK" << endl;
-      return false;
+      if(rehash()){
+        insertHelper(key, first);
+      } else {
+        cout << "Can't add value" << endl;
+        return false;
+      }
     } else {
       table[index] = key;
       insertHelper(temp, first);

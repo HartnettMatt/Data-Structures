@@ -5,10 +5,11 @@ using namespace std;
 
 class hashCC {
   int tableSize;
-
+  int rehashCount;
   int *table;
 
   bool insertHelper(int key, int first);
+  bool rehash();
   public:
     hashCC();  // Constructor
 
