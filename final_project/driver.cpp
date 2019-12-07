@@ -22,11 +22,14 @@ int main()
   int searchFor = 34047189;
 
   // Simple test code for the linked list implementation
-  bool testingLL = false;
+  bool testingLL = true;
   if(testingLL){
-    ostream oFA;
+    ofstream oFA;
     oFA.open("outputfile.txt");
-    int *counts[40000] = {0};
+    int *counts[40000];
+    for(int i = 0; i < 40000; i++){
+      counts[i] = 0;
+    }
     hashLL htLL;
     htLL.insertItem(searchFor);
     // Fill hash table with data set
