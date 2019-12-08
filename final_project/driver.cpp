@@ -15,30 +15,20 @@ int main()
 {
   // File stream for data set A
   ifstream iFA;
-  iFA.open("dataSetA.csv");
   string s;
 
   // Number to test with (gotten from data set A):
   int searchFor = 34047189;
 
   // Simple test code for the linked list implementation
-  bool testingLL = true;
+  bool testingLL = false;
   if(testingLL){
-    ofstream oFA;
-    oFA.open("outputfile.txt");
-    int *counts[40000];
-    for(int i = 0; i < 40000; i++){
-      counts[i] = 0;
-    }
+
     hashLL htLL;
     htLL.insertItem(searchFor);
     // Fill hash table with data set
     while(getline(iFA, s, ',')){
       htLL.insertItem(stoi(s));
-      counts[htLL.hashFunction(stoi(s))]++;
-    }
-    for(int i = 0; i < 40000; i++){
-      oFA << i << "\t" << counts[i] << endl;
     }
     cout<< "The first 100 elements of the LL hash table are:"<<endl;
     // htLL.print100();
@@ -188,13 +178,13 @@ int main()
   }
 
   // Code to time the hash tables
-  bool timing = false;
+  bool timing = true;
   if(timing){
 
     // Loop to test different load factors
     for(float load = 0.1; load < 1.0; load += .1){
       iFA.close();
-      iFA.open("dataSetA.csv");
+      iFA.open("dataSetC.csv");
       // build a full array out of the test values
       vector <int> arr;
       int i = 0;
@@ -204,7 +194,7 @@ int main()
       }
       // These arrays are needed for timing of insert search and delete
       vector<int> insertArr, searchArr, deleteArr;
-      hashLL htLL;
+      hashLPprime htLL;
 
       // Loop to fill the hash table with random values from the test data
       for(int j = 0; j < (int)(10009*load)+100; j++){
@@ -238,9 +228,11 @@ int main()
       // Output file for moving the data into google sheets
       ofstream oFS;
       oFS.open("outputfile.txt");
-      float outArr[9][100];
+      float insArr[9][100];
+      float searArr[9][100];
+      float delArr[9][100];
       // Now that the hash table has the load factors worth of values, can actually test the three methods:
-      float timeTotal = 0;
+      float insTotal = 0, searTotal = 0, delTotal = 0;;
       std::chrono::time_point<std::chrono::system_clock> startTime, endTime;
 
       cout << "\n" << "Load factor: " << load << endl;
@@ -250,23 +242,62 @@ int main()
         typedef std::chrono::high_resolution_clock Time;
         typedef std::chrono::nanoseconds ns;
         typedef std::chrono::duration<float> fsec;
-        htLL.insertItem(insertArr[k]);
+        // htLL.insertItem(insertArr[k]);
+
+        // Time insert:
         auto t0 = Time::now();
-        // This is the actual function being tested:
-        htLL.deleteItem(insertArr[k]);
+
+        htLL.insertItem(insertArr[k]);
+
         auto t1 = Time::now();
         fsec fs = t1 - t0;
         ns d = std::chrono::duration_cast<ns>(fs);
         // std::cout << fs.count() << "\n";
-        timeTotal += fs.count();
+        insTotal += fs.count();
         // Add to the output array
-        outArr[(int)(load*10)-1][k] = fs.count();
+        insArr[(int)(load*10)-1][k] = fs.count();
+
+        // Time search:
+        t0 = Time::now();
+
+        htLL.searchItem(insertArr[k]);
+
+        t1 = Time::now();
+        fs = t1 - t0;
+        d = std::chrono::duration_cast<ns>(fs);
+        // std::cout << fs.count() << "\n";
+        searTotal += fs.count();
+        // Add to the output array
+        searArr[(int)(load*10)-1][k] = fs.count();
+
+        // Time delete:
+        t0 = Time::now();
+
+        htLL.deleteItem(insertArr[k]);
+
+        t1 = Time::now();
+        fs = t1 - t0;
+        d = std::chrono::duration_cast<ns>(fs);
+        // std::cout << fs.count() << "\n";
+        delTotal += fs.count();
+        // Add to the output array
+        delArr[(int)(load*10)-1][k] = fs.count();
       }
-      cout << "Average time: " << timeTotal/100 << endl;
+      cout << "Average insert time: " << insTotal/100 << endl;
+      cout << "Average search time: " << searTotal/100 << endl;
+      cout << "Average delete time: " << delTotal/100 << endl;
       // Send output array to output File
       for(int f = 0; f < 100; f++){
         for(int y = 0; y < 9; y++){
-          oFS << outArr[y][f] << "\t";
+          oFS << insArr[y][f] << "\t";
+        }
+        oFS << "\t";
+        for(int y = 0; y < 9; y++){
+          oFS << searArr[y][f] << "\t";
+        }
+        oFS << "\t";
+        for(int y = 0; y < 9; y++){
+          oFS << delArr[y][f] << "\t";
         }
         oFS << "\n";
       }
