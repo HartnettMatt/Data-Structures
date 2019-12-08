@@ -9,18 +9,16 @@ hashLP::hashLP(){
 // inserts a key into hash table
 bool hashLP::insertItem(int key){
   int index = hashFunction(key);
-  if(table[index] == 0){
-    table[index] = key;
-    return true;
-  } else {
-    for(int i = index+1; i != index; i++){
-      if(i == tableSize){
-        i = 0;
-      }
-      if(table[i] == 0){
-        table[i] = key;
-        return true;
-      }
+  for(int i = index; i < tableSize; i++){
+    if(table[i] == 0){
+      table[i] = key;
+      return true;
+    }
+  }
+  for(int i = 0; i < index; i++){
+    if(table[i] == 0){
+      table[i] = key;
+      return true;
     }
   }
   return false;

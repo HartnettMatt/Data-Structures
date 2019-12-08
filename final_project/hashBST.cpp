@@ -43,6 +43,8 @@ Node* hashBST::addNodeHelper(Node* currNode, int data)
   if(currNode == NULL){
     Node *nw = new Node;
     nw->key = data;
+    nw->left = nullptr;
+    nw->right = nullptr;
     return nw;
   }
   else if(currNode->key < data){
@@ -57,15 +59,7 @@ Node* hashBST::addNodeHelper(Node* currNode, int data)
 bool hashBST::insertItem(int key)
 {
   int index = hashFunction(key);
-  if(table[index] == nullptr){
-    Node* nw = new Node;
-    nw->key = key;
-    nw->right = nullptr;
-    nw->left = nullptr;
-    table[index] = nw;
-  } else {
-    addNodeHelper(table[index], key);
-  }
+  table[index] = addNodeHelper(table[index], key);
   return true;
 }
 
@@ -125,7 +119,6 @@ bool hashBST::deleteNode(Node * currNode, int key){
     if(currNode->left == NULL && currNode->right == NULL)
     {
       currNode = nullptr;
-      cout << "here";
       delete currNode;
       return true;
     }

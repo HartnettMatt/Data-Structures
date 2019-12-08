@@ -1,49 +1,47 @@
 #include "hashLP.hpp"
+#include <math.h>
 using namespace std;
 
-hashLP::hashLP(){
+hashLPprime::hashLPprime(){
   tableSize = 10009;
   table = new int[tableSize];
 }
 
 // inserts a key into hash table
-bool hashLP::insertItem(int key){
+bool hashLPprime::insertItem(int key){
   int index = hashFunction(key);
-  if(table[index] == 0){
-    table[index] = key;
-    return true;
-  } else {
-    for(int i = index+1; i != index; i++){
-      if(i == tableSize){
-        i = 0;
-      }
-      if(table[i] == 0){
-        table[i] = key;
-        return true;
-      }
+  for(int i = index; i < tableSize; i++){
+    if(table[i] == 0){
+      table[i] = key;
+      return true;
+    }
+  }
+  for(int i = 0; i < index; i++){
+    if(table[i] == 0){
+      table[i] = key;
+      return true;
     }
   }
   return false;
 }
-
 // hash function to map values to key
-unsigned int hashLP::hashFunction(int key)
+unsigned int hashLPprime::hashFunction(int key)
 {
     return (int)floor((key*1.0)/ tableSize)%tableSize;
 }
 
-void hashLP::printTable(){
+void hashLPprime::printTable(){
   for (int i = 0; i < tableSize; i++) {
     cout << i <<" || " << table[i] << endl;;
   }
 }
-void hashLP::print100(){
+void hashLPprime::print100(){
   for (int i = 0; i < 100; i++) {
     cout << i <<" || " << table[i] << endl;;
   }
 }
 
-int hashLP::searchItem(int key){
+int hashLPprime::searchItem(int key){
   int index = hashFunction(key);
   if(table[index] == key){
     return index;
@@ -60,7 +58,7 @@ int hashLP::searchItem(int key){
   return -1;
 }
 
-bool hashLP::deleteItem(int key){
+bool hashLPprime::deleteItem(int key){
   int index = hashFunction(key);
   if(table[index] == key){
     table[index] = -1;

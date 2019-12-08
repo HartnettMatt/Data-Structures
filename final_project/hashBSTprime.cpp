@@ -1,7 +1,8 @@
 #include "hashBST.hpp"
+#include <math.h>
 using namespace std;
 
-hashBST::hashBST()
+hashBSTprime::hashBSTprime()
 {
     tableSize = 10009;
     table = new Node*[10009];
@@ -10,14 +11,14 @@ hashBST::hashBST()
 }
 
 //function to calculate hash function
-unsigned int hashBST::hashFunction(int key)
+unsigned int hashBSTprime::hashFunction(int key)
 {
 return (int)floor((key*1.0)/ tableSize)%tableSize;
 }
 
 
-//functions to search
-Node* searchKeyHelper(Node* currNode, int data){
+// functions to search
+Node* hashBSTprime::searchKeyHelper(Node* currNode, int data){
     if(currNode == NULL)
         return NULL;
 
@@ -29,7 +30,7 @@ Node* searchKeyHelper(Node* currNode, int data){
 
     return searchKeyHelper (currNode->right, data);
 }
-Node* hashBST::searchItem(int key)
+Node* hashBSTprime::searchItem(int key)
 {
     //Compute the index by using the hash function
     int index = hashFunction(key);
@@ -38,11 +39,13 @@ Node* hashBST::searchItem(int key)
 }
 
 //functions to insert
-Node* hashBST::addNodeHelper(Node* currNode, int data)
+Node* hashBSTprime::addNodeHelper(Node* currNode, int data)
 {
   if(currNode == NULL){
     Node *nw = new Node;
     nw->key = data;
+    nw->left = nullptr;
+    nw->right = nullptr;
     return nw;
   }
   else if(currNode->key < data){
@@ -54,23 +57,15 @@ Node* hashBST::addNodeHelper(Node* currNode, int data)
   return currNode;
 
 }
-bool hashBST::insertItem(int key)
+bool hashBSTprime::insertItem(int key)
 {
   int index = hashFunction(key);
-  if(table[index] == nullptr){
-    Node* nw = new Node;
-    nw->key = key;
-    nw->right = nullptr;
-    nw->left = nullptr;
-    table[index] = nw;
-  } else {
-    addNodeHelper(table[index], key);
-  }
+  table[index] = addNodeHelper(table[index], key);
   return true;
 }
 
 // functions to display hash table
-void hashBST::printHelper(Node * node)
+void hashBSTprime::printHelper(Node * node)
 {
   if(node != nullptr){
     printHelper(node->left);
@@ -79,7 +74,7 @@ void hashBST::printHelper(Node * node)
   }
 
 }
-void hashBST::printTable()
+void hashBSTprime::printTable()
 {
   for (int i = 0; i < tableSize; i++) {
     cout << i <<" || ";
@@ -96,7 +91,7 @@ void hashBST::printTable()
  }
 
 // function to display first 100 values for testing purpose
-void hashBST::print100()
+void hashBSTprime::print100()
 {
   for (int i = 0; i < 100; i++) {
     cout << i <<" || ";
@@ -113,7 +108,7 @@ void hashBST::print100()
 }
 
 // helper function to delete item from hash table
-bool hashBST::deleteNode(Node * currNode, int key){
+bool hashBSTprime::deleteNode(Node * currNode, int key){
   if(key < currNode->key){
     deleteNode(currNode->left, key);
   } else if(key > currNode->key){
@@ -125,7 +120,6 @@ bool hashBST::deleteNode(Node * currNode, int key){
     if(currNode->left == NULL && currNode->right == NULL)
     {
       currNode = nullptr;
-      cout << "here";
       delete currNode;
       return true;
     }
@@ -157,7 +151,7 @@ bool hashBST::deleteNode(Node * currNode, int key){
 }
 
 // function to delete item from hash table
-bool hashBST::deleteItem(int key)
+bool hashBSTprime::deleteItem(int key)
 {
   int index = hashFunction(key);
   if(table[index] == nullptr){
@@ -173,7 +167,7 @@ bool hashBST::deleteItem(int key)
 }
 
 // function to find smallest value from tree with root currNode
-Node* hashBST::getMinValueNode(Node* currNode){
+Node* hashBSTprime::getMinValueNode(Node* currNode){
     if(currNode->left == NULL){
       return currNode;
     }
