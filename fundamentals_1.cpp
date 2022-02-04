@@ -12,13 +12,14 @@ int addToArrayDesc(float sortedArray[], int numElements, float newValue){
         location = i;
       }
     }
+    cout << location << endl;
     float prev;
     float temp = newValue;
-    for (int k = location; k++; k < numElements+1){
-      prev = sortedArray[i];
-      sortedArray[i] = temp;
-      temp = sortedArray[i+1];
-      sortedArray[i+1] = prev;
+    for (int k = location; k++; k < numElements){
+      prev = sortedArray[k];
+      sortedArray[k] = temp;
+      temp = sortedArray[k+1];
+      sortedArray[k+1] = prev;
     }
   }
   return arraysize;
